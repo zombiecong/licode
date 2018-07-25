@@ -47,7 +47,7 @@ endif(DOXYGEN_FOUND)
 set (ERIZO_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/erizo)
 set (ERIZO_TEST ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
-file(GLOB_RECURSE ERIZO_SOURCES_FILES ${ERIZO_SOURCE}/*.cpp ${ERIZO_SOURCE}/*.h ${ERIZO_TEST}/*.cpp)
+file(GLOB_RECURSE ERIZO_SOURCES_FILES ${ERIZO_SOURCE}/*.cpp ${ERIZO_SOURCE}/*.h)
 add_custom_target(lint
     ${ERIZO_ROOT_DIR}/utils/cpplint.py --filter=-legal/copyright,-build/include --linelength=120 ${ERIZO_SOURCES_FILES}
     WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -124,6 +124,6 @@ ExternalProject_Add(gtest
   CMAKE_ARGS -DCMAKE_INSTALL_PREFIX:PATH=${GMOCK_BUILD}
 )
 
-enable_testing()
+#enable_testing()
 
-add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/test")
+#add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/test")

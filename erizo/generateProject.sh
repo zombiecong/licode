@@ -21,5 +21,5 @@ generateVersion() {
 }
 
 
-generateVersion release
-generateVersion debug
+generateVersion $*
+#generateVersion debug

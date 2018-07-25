@@ -12,6 +12,7 @@ LIB_DIR=$BUILD_DIR/libdeps
 PREFIX_DIR=$LIB_DIR/build/
 NVM_CHECK="$PATHNAME"/checkNvm.sh
 FAST_MAKE=''
+DR='debug'
 
 NUM_CORES=1;
 if [ "$(uname)" == "Darwin" ]; then
@@ -37,6 +38,8 @@ OPTIONS:
    -h      Show this message
    -e      Compile Erizo
    -a      Compile Erizo API
+   -m      Use my own node instead of nvm
+   -r      Release , default Debug
    -c      Install Erizo node modules
    -d      Delete Erizo object files
    -f      Use 4 threads to build
@@ -44,6 +47,7 @@ OPTIONS:
    -t      Run Tests
 EOF
 }
+
 
 pause() {
   read -p "$*"
@@ -56,10 +60,15 @@ check_result() {
   fi
 }
 
+
+release(){
+  DR='release'
+}
+
 install_erizo(){
   echo 'Installing erizo...'
   cd $ROOT/erizo
-  ./generateProject.sh
+  ./generateProject.sh $DR
   ./buildProject.sh $FAST_MAKE
   if [ "$DELETE_OBJECT_FILES" == "true" ]; then
     ./cleanObjectFiles.sh
@@ -78,6 +87,16 @@ install_erizo_api(){
   check_result $?
   cd $CURRENT_DIR
 }
+
+install_erizo_api_mynode(){
+  echo 'Installing erizoAPI with local node...'
+  cd $ROOT/erizoAPI
+  export GYP_FILE=$DR.gyp
+  node-gyp2 rebuild
+  check_result $?
+  cd $CURRENT_DIR
+}
+
 
 install_erizo_controller(){
   echo 'Installing erizoController...'
@@ -111,12 +130,15 @@ then
   install_erizo_controller
   install_spine
 else
-  while getopts “heacstfd” OPTION
+  while getopts “rheacstfdm” OPTION
   do
     case $OPTION in
       h)
         usage
         exit 1
+        ;;
+      r)
+        release
         ;;
       e)
         install_erizo
@@ -133,6 +155,9 @@ else
       t)
         execute_tests
         ;;
+      m)
+        install_erizo_api_mynode
+        ;;  
       f)
         FAST_MAKE="-j$NUM_CORES"
         FAST_BUILD="env JOBS=$NUM_CORES"
