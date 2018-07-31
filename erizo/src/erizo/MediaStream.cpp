@@ -335,7 +335,9 @@ void MediaStream::read(std::shared_ptr<DataPacket> packet) {
   // DELIVER FEEDBACK (RR, FEEDBACK PACKETS)
   if (chead->isFeedback()) {
     if (fb_sink_ != nullptr && should_send_feedback_) {
-      fb_sink_->deliverFeedback(std::move(packet));
+      if(!(chead->isREMB() || chead->isRR())){
+        fb_sink_->deliverFeedback(std::move(packet));
+      }
     }
   } else {
     // RTP or RTCP Sender Report
