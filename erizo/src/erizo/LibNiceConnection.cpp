@@ -110,12 +110,12 @@ void LibNiceConnection::close() {
 }
 
 void LibNiceConnection::onData(unsigned int component_id, char* buf, int len) {
-  IceState state;
-  {
-    boost::mutex::scoped_lock lock(close_mutex_);
-    state = this->checkIceState();
-  }
-  if (state == IceState::READY) {
+  // IceState state;
+  // {
+  //   boost::mutex::scoped_lock lock(close_mutex_);
+  //   state = this->checkIceState();
+  // }
+  if (this->checkIceState() == IceState::READY) {
     packetPtr packet (new DataPacket());
     memcpy(packet->data, buf, len);
     packet->comp = component_id;
