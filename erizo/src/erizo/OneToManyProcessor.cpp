@@ -12,7 +12,7 @@
 
 namespace erizo {
   DEFINE_LOGGER(OneToManyProcessor, "OneToManyProcessor");
-  OneToManyProcessor::OneToManyProcessor() : feedbackSink_{nullptr} {
+  OneToManyProcessor::OneToManyProcessor(bool disable_remb_rr) : feedbackSink_{nullptr}, disable_remb_rr_{disable_remb_rr} {
     ELOG_DEBUG("OneToManyProcessor constructor");
   }
 
@@ -69,7 +69,16 @@ namespace erizo {
 
   int OneToManyProcessor::deliverFeedback_(std::shared_ptr<DataPacket> fb_packet) {
     if (feedbackSink_ != nullptr) {
-      feedbackSink_->deliverFeedback(fb_packet);
+
+      if(disable_remb_rr_){
+        RtcpHeader *chead = reinterpret_cast<RtcpHeader*>(fb_packet->data);
+        if(!(chead->isREMB() || chead->isRR())){
+          feedbackSink_->deliverFeedback(fb_packet);
+        }
+      }else{
+        feedbackSink_->deliverFeedback(fb_packet);
+      }
+      
     }
     return 0;
   }

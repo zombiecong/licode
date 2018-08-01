@@ -248,18 +248,15 @@ int MediaStream::deliverFeedback_(std::shared_ptr<DataPacket> fb_packet) {
   RtcpHeader *chead = reinterpret_cast<RtcpHeader*>(fb_packet->data);
   uint32_t recvSSRC = chead->getSourceSSRC();
 
-  if(chead->isREMB() || chead->isRR()){
-      return fb_packet->length;
+  if (chead->isREMB()) {
+    for (uint8_t index = 0; index < chead->getREMBNumSSRC(); index++) {
+      uint32_t ssrc = chead->getREMBFeedSSRC(index);
+      if (isVideoSourceSSRC(ssrc)) {
+        recvSSRC = ssrc;
+        break;
+      }
+    }
   }
-  // if (!is_publisher_ && chead->isREMB()) {
-  //   for (uint8_t index = 0; index < chead->getREMBNumSSRC(); index++) {
-  //     uint32_t ssrc = chead->getREMBFeedSSRC(index);
-  //     if (isVideoSourceSSRC(ssrc)) {
-  //       recvSSRC = ssrc;
-  //       break;
-  //     }
-  //   }
-  // }
 
   if (isVideoSourceSSRC(recvSSRC)) {
     fb_packet->type = VIDEO_PACKET;

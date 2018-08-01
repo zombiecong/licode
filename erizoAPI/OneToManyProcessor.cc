@@ -83,8 +83,11 @@ NAN_MODULE_INIT(OneToManyProcessor::Init) {
 }
 
 NAN_METHOD(OneToManyProcessor::New) {
+
+  bool disable_remb_rr = info[0]->BooleanValue();
+
   OneToManyProcessor* obj = new OneToManyProcessor();
-  obj->me = new erizo::OneToManyProcessor();
+  obj->me = new erizo::OneToManyProcessor(disable_remb_rr);
   obj->msink = obj->me;
 
   obj->Wrap(info.This());

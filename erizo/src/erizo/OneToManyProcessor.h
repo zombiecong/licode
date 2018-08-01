@@ -28,7 +28,7 @@ class OneToManyProcessor : public MediaSink, public FeedbackSink {
   std::map<std::string, std::shared_ptr<MediaSink>> subscribers;
   std::shared_ptr<MediaSource> publisher;
 
-  OneToManyProcessor();
+  OneToManyProcessor(bool disable_remb_rr);
   virtual ~OneToManyProcessor();
   /**
   * Sets the Publisher
@@ -58,6 +58,8 @@ class OneToManyProcessor : public MediaSink, public FeedbackSink {
   int deliverFeedback_(std::shared_ptr<DataPacket> fb_packet) override;
   int deliverEvent_(MediaEventPtr event) override;
   void closeAll();
+
+  bool disable_remb_rr_;
 };
 
 }  // namespace erizo
