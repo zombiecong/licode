@@ -1,4 +1,4 @@
-FROM daocloud.io/webrtc_cloud/bjy-licode-env-debug
+FROM daocloud.io/webrtc_cloud/bjy-licode-env
 
 MAINTAINER chencong@baijiayun.com
 
