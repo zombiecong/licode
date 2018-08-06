@@ -5,7 +5,7 @@
   },
   'targets': [
   {
-    'target_name': 'addonDebug',
+    'target_name': 'addon',
       'sources': ['<@(common_sources)'],
       'include_dirs' : ['<@(common_include_dirs)'],
       'libraries': ['-L$(ERIZO_HOME)/build/debug/erizo -lerizo -Wl,-rpath,<(module_root_dir)/../erizo/build/debug/erizo'],
